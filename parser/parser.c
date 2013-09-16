@@ -75,4 +75,19 @@ void init(Matrix* matrix, int row, int column){
 	
 }
 
+int write_arquive(char *path, Matrix *matrix){
+
+	FILE* file = fopen(path,"w");
+	int i,j;
+	
+	fprintf(file, "LINHAS = %d\n", matrix->row);
+	fprintf(file, "COLUNAS = %d", matrix->column);
+	for(i = 0; i < matrix->row ; i++){
+		fprintf(file, "\n");
+		for(j = 0; j < matrix->column ; j++)
+			fprintf(file,"%d ",matrix->value[i][j]);
+	}
+	
+}
+
 

@@ -42,7 +42,10 @@ int main(){
 	
 	printf("\n");
 
+	printf("----------------- \n");
+	printf("File writing tests \n");
 
+	write_arquive("saida.txt", m1);
 	free(m1);
 	free(m2);
 
