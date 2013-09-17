@@ -66,16 +66,16 @@ int* getColumnMatrix(Matrix* matrix, int index){
 void init(Matrix* matrix, int row, int column){
 	int i = 0;	
 	
-    matrix->row = row;
+	matrix->row = row;
 	matrix->column = column;
+	
 	matrix->value = malloc( row * sizeof(int) );
 	
 	for(i = 0; i < row; i++)
 		matrix->value[i] = malloc( column * sizeof(int) );
-	
 }
 
-int write_arquive(char *path, Matrix *matrix){
+void write_arquive(char *path, Matrix *matrix){
 
 	FILE* file = fopen(path,"w");
 	int i,j;
@@ -89,5 +89,3 @@ int write_arquive(char *path, Matrix *matrix){
 	}
 	
 }
-
-

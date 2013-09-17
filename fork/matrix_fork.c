@@ -36,7 +36,11 @@ int main(int argc, const char *argv[]){
 	Matrix* matrix1 = NULL;
 	Matrix* matrix2 = NULL;
 	Matrix* matrix3 = NULL; // shared memory
-
+	int *matrix;
+	int k = 0, j = 0;
+	int divider = 0;	
+	int rest = 0;
+	int step = 0;
 
 
 // Verifica se foi passado o numero de processos a ser criado
@@ -60,103 +64,77 @@ int main(int argc, const char *argv[]){
 	if(matrix1->row < processos)
 		processos = matrix1->row ;	
 	
+	matrix3 = init_matrix(matrix1->row, matrix2->column);
 
 	// Alocar memoria do segmento
-	segment_id = shmget(IPC_PRIVATE, sizeof(Matrix), S_IRUSR | S_IWUSR);	
+	segment_id = shmget(IPC_PRIVATE, sizeof(int) * matrix1->row * matrix2->column, S_IRUSR | S_IWUSR);	
+
 	if(segment_id < 0){
 		printf("Impossível de criar memoria compartilhada\n");
 		exit(0);
 	}	
-	
-	matrix3 = (Matrix*)shmat(segment_id, NULL, 0);
-	init(matrix3, matrix1->row, matrix2->column);
-	shmdt(matrix3);
-	//shmctl(segment_id, IPC_RMID, NULL);
-	
-		
 
+	/* attach the shared memory segment */   	
+	matrix = (int *)shmat(segment_id, 0, 0);
 	
 	// Elementos de matrix resultante divido pelo processos
-	int divider = matrix1->row / processos;
-	int rest = matrix1->row % processos;
-	int step = divider + rest;
-	int k = 0, j = 0;
+	divider = matrix1->row / processos;
+	rest = matrix1->row % processos;
+	step = divider + rest;
 	
-
 	// cria varios processos  
 	
-	
-
 	for(i = 0; i < processos; i++){
-		pid = fork();		
-		if( pid == 0){// Processo filho
-		  
-		/* attach the shared memory segment */   
-   	     matrix3 = (Matrix*) shmat(segment_id, NULL, 0);
+		pid = fork();	
 		
+		if( pid == 0){// Processo filho
+		 
 		  for(k; k < step; k++){				
 			for(j = 0; j < matrix2->column; j++){
-			
 			  int* linha = getRowMatrix(matrix1, k);
 			  int* col = getColumnMatrix(matrix2, j);
 			  int e = calc_element(linha, col, matrix1->column);
-			  matrix3->value[k][j] = e;					
-				
-			  printf("calc:%d, num processo: %d\n",e, i);
+			  matrix[ k*matrix2->column + j ] = e;				  
 			 }
 		  }
-	
-		  
-		  /* detach the shared memory segment */    
-		  shmdt(matrix3);
-	
-		  /* remove the shared memory segment */   
-		  shmctl(segment_id, IPC_RMID, NULL);
-			
-			exit(0);
+		
+		 exit(1);
 		}else{	// processo pai	
 			k = step;		
 			step += divider;			
-			printf("Pai %d\n",pid);
 		}
 	}
 
-
-	//waitpid(pid,0,0);	
-	//wait(&status);
-	//while (-1 == waitpid(-1, NULL, 0));
+	// Espera processos filhos acabar
 	for(i=0; i<processos; i++){
 	    wait(NULL);
-	    
-	  }
-	//printf("executing %d %d\n", pid, WEXITSTATUS(status));
-	printf("executing parent\n");
-
-	matrix3 = (Matrix*) shmat(segment_id, NULL, 0);
-	
-	printf("executing parent 2 %d\n",matrix3->column);
-	
-	
-	for(k = 0; i < matrix3->row; i++){
-		for(j = 0; i < matrix3->column; j++){
-			printf("%d ",matrix3->value[k][j]);		
-		}
-		printf("\n");
 	}
+	
 
-	printf("executing parent 3\n");
-	shmdt(matrix3);
-	printf("executing parent 4\n");
+	// Passando para o formato da estrutura matrix
+	for (k = 0; k < matrix1->row; k++){
+      for (j = 0; j < matrix2->column; j++){
+			printf("%d ",matrix[k*matrix2->column + j]); 
+			matrix3->value[k][j] = matrix[k*matrix2->column + j];
+    	}
+	  printf("\n");	
+	 }
+
+	/*
+
+		Não consegui escrever a saida do no arquivo de texto unica coisa que falta
+*/
+	
+	//write_arquive("out.txt", matrix3);		
+
+	/* detach the shared memory segment */    
+	shmdt((void*)matrix);
+	 /* remove the shared memory segment */   
 	shmctl(segment_id, IPC_RMID, NULL);
-	printf("executing parent 5\n");
 
 	free(matrix1);
-printf("executing parent 6\n");
 	free(matrix2);
-printf("executing parent 7\n");
 	free(matrix3);
 
-    
 	return 0;
-	  
 }
