@@ -6,6 +6,7 @@
 #include <sys/shm.h>
 #include <sys/stat.h>
 #include "parser.h"
+#include <time.h>
 
 /*******
 
@@ -41,7 +42,8 @@ int main(int argc, const char *argv[]){
 	int divider = 0;	
 	int rest = 0;
 	int step = 0;
-
+	time_t start, end;
+	clock_t clock_start, clock_end;
 
 // Verifica se foi passado o numero de processos a ser criado
 	if (argc != 2) {
@@ -54,6 +56,7 @@ int main(int argc, const char *argv[]){
     processos = atoi(argv[1]);
 	matrix1 = read_arquive("..//in1.txt");	
 	matrix2 = read_arquive("..//in2.txt");
+	
 	
 	if(matrix1->column != matrix2->row){
 		printf("Dimensões de matrizes imcompatíveis para multiplicação\n");		
@@ -82,6 +85,8 @@ int main(int argc, const char *argv[]){
 	rest = matrix1->row % processos;
 	step = divider + rest;
 	
+	
+	unsigned long s_time = clock();
 	// cria varios processos  
 	
 	for(i = 0; i < processos; i++){
@@ -109,8 +114,13 @@ int main(int argc, const char *argv[]){
 	for(i=0; i<processos; i++){
 	    wait(NULL);
 	}
-	
+	unsigned long e_time = clock();
+	 
+	 /* TODO COUNT THE TIME SPENT */
 
+ 	//float diff = (((float)e_time - (float)s_time) / CLOCKS_PER_SEC) * 1000;   
+ 	//printf("TEMPO %f \n", diff ); 
+	
 	// Passando para o formato da estrutura matrix
 	for (k = 0; k < matrix1->row; k++){
       for (j = 0; j < matrix2->column; j++){
@@ -125,7 +135,7 @@ int main(int argc, const char *argv[]){
 		Não consegui escrever a saida do no arquivo de texto unica coisa que falta
 */
 	
-	//write_arquive("out.txt", matrix3);		
+	write_arquive("..//out.txt", matrix3);		
 
 	/* detach the shared memory segment */    
 	shmdt((void*)matrix);

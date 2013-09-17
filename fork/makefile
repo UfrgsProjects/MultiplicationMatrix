@@ -2,7 +2,7 @@
 #Colocar no diretório home para funcionar compilação
 
 # Caminhos Absolutos
-parserInclude=../../sisop2-trab1/parser/
+parserInclude=../../MultiplicationMatrix/parser/
 
 # comando para mover obj para  pasta bin: 'mv *.o ${bin}' 
 

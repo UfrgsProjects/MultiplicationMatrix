@@ -9,10 +9,10 @@ Matrix* init_matrix(int row, int column){
 
 	matrix->row = row;
 	matrix->column = column;
-	matrix->value = malloc( row * sizeof(int) );
+	matrix->value = (int **) malloc( row * sizeof(int*) );
 	
 	for(i = 0; i < row; i++)
-		matrix->value[i] = malloc( column * sizeof(int) );
+		matrix->value[i] = (int *) malloc( column * sizeof(int) );
 	
 	return matrix;
 }
@@ -23,7 +23,7 @@ Matrix* read_arquive(char *path){
 	FILE* file = fopen(path,"r");
 	Matrix* matrix; 
 	int row = 0, column = 0, i = 0, j = 0;
-	char text[20];
+	char text[80];
 
 	if(file == NULL){
 		printf("Error to read File!!!");
@@ -34,15 +34,19 @@ Matrix* read_arquive(char *path){
 	fscanf(file, "%s %s %d", text, text, &row);
 	fscanf(file, "%s %s %d", text, text, &column);
 	
+	
 	// Inicialize dinamic bidimensional vector 
     matrix = init_matrix(row, column);
 	
 	
+	matrix->value[0][0] = 10;
+	
+
 	// Read values of matrix
 	for(i = 0; i < matrix->row; i++)
 		for(j = 0; j < matrix->column; j++)
 			fscanf(file, "%d", &matrix->value[i][j]);
-	
+			
 	fclose(file);
 	return matrix;
 }
