@@ -26,4 +26,4 @@ int* getColumnMatrix(Matrix* matrix, int index);
 void init(Matrix* matrix, int row, int column);
 
 // TODO Escrever matrix Resultate 
-int write_arquive(char *path, Matrix *matrix);
+void write_arquive(char *path, Matrix *matrix);
