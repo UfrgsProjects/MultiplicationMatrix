@@ -43,7 +43,7 @@ void worker(void *arg){
 		for(j=0;j<matrix2->column;j++){
 		col = getColumnMatrix(matrix2,j);
 		matrix3->value[i][j] = calc_element(row,col,matrix1->row);
-		printf("[%d][%d] %d", i,j, matrix3->value[i][j]);
+		printf(" %d", matrix3->value[i][j]);
 		}
 	printf("\n");
 	}
