@@ -8,3 +8,5 @@ one using fork and another using pthreads.
 * Rodrigo F. Leite 
 * Felipe S. F. Paula 
 
+Included time function
+Included multiplication by threads
