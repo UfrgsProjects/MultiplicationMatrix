@@ -15,4 +15,4 @@ teste_fila:
 
 compile-execute:
 	gcc -Wall -c -I $(parserInclude)  $(parserInclude)parser.c matrix_thread.c
-	gcc -pthread parser.o matrix_thread.o -o matrix_thread
+	gcc -pthread parser.o matrix_thread.o -o matrix_thread -lrt
