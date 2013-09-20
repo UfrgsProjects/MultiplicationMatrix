@@ -9,7 +9,7 @@
 #include "parser.h"
 #include <time.h>
 #include <pthread.h>
-
+#include <string.h>
 
 Matrix* matrix1, *matrix2, *matrix3;
 int nroThreads;
@@ -44,7 +44,7 @@ int main(int argc, const char *argv[]){
 
 	int i,*k;
 	pthread_t *threads;
-	
+	FILE* file_tempo = fopen("tempo.txt","w"); 
 	//Cuidado, essa medida de tempo não é portável!
 	struct timespec ts,tf;
 	
@@ -81,8 +81,8 @@ int main(int argc, const char *argv[]){
   	
   	clock_gettime(CLOCK_MONOTONIC, &tf);
 
-	 printf("TEMPO s: %d  ms: %d \n", (tf.tv_sec - ts.tv_sec) , ( ((double) (tf.tv_nsec - ts.tv_nsec)) /1000)); 
-	 
+	 printf("TEMPO s: %f  ms: %f \n", (double)(tf.tv_sec - ts.tv_sec) , ( ((double) (tf.tv_nsec - ts.tv_nsec)) / 1000)); 
+	 fprintf(file_tempo,"%f \n",(((double) (tf.tv_nsec - ts.tv_nsec)) / 1000));
 	 write_arquive("..//out.txt",matrix3);
 	return 0;		
 }

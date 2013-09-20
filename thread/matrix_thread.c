@@ -56,6 +56,7 @@ int main(int argc, const char *argv[]){
 	
 	threads = (pthread_t *) malloc(nroThreads * sizeof(pthread_t));
 	
+	sleep(5);
 	if(matrix1->column != matrix2->row){
 		printf("Dimensões de matrizes imcompatíveis para multiplicação\n");		
 		exit(0);
@@ -67,7 +68,7 @@ int main(int argc, const char *argv[]){
 		nroThreads = matrix1->row ;	
 	
 	matrix3 = init_matrix(matrix1->row, matrix2->column);
-	
+	unsigned long s_time = clock();
 	for(i=0;i<nroThreads;i++){
 			pthread_create(&threads[i], NULL, worker, (void *)(i));
 	}
@@ -76,6 +77,10 @@ int main(int argc, const char *argv[]){
 	for (i = 0; i < nroThreads; i++) 
     	pthread_join(threads[i], NULL);
   	
+  	unsigned long e_time = clock();
+  	
+  	 float diff = (((float)e_time - (float)s_time) / CLOCKS_PER_SEC) * 1000;   
+ 	 printf("TEMPO %f \n", diff ); 
 	
 	return 0;		
 }
