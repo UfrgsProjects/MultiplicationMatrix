@@ -81,8 +81,8 @@ int main(int argc, const char *argv[]){
   	
   	clock_gettime(CLOCK_MONOTONIC, &tf);
 
-	 printf("TEMPO s: %f  ms: %f \n", (double)(tf.tv_sec - ts.tv_sec) , ( ((double) (tf.tv_nsec - ts.tv_nsec)) / 1000)); 
-	 fprintf(file_tempo,"%f \n",(((double) (tf.tv_nsec - ts.tv_nsec)) / 1000));
+	 printf("TEMPO s: %f  ms: %f \n", (double)(tf.tv_sec - ts.tv_sec) , ( ((double) (tf.tv_nsec - ts.tv_nsec)) / 1000000)); 
+	 fprintf(file_tempo,"%f \n",(((double) (tf.tv_nsec - ts.tv_nsec)) / 1000000));
 	 write_arquive("..//out.txt",matrix3);
 	return 0;		
 }
